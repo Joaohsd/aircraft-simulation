@@ -12,10 +12,11 @@ public class TestData implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    //Relationship between TestData and Test
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumns({
             @JoinColumn(name="test_number"),
-            @JoinColumn(name="aircraft_code")
+            @JoinColumn(name="aircraft_code"),
     })
     private Test test;
     @ManyToOne(cascade = CascadeType.ALL)
