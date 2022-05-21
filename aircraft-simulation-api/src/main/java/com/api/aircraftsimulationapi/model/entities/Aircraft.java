@@ -19,6 +19,7 @@ public class Aircraft implements Serializable {
     private int numParameters;
     @Column(nullable = false)
     private boolean test;
+    //Relationship between Aircraft and Parameter (n:m)
     @ManyToMany
     @JoinTable(
             name = "AircraftParameter",
@@ -26,6 +27,7 @@ public class Aircraft implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "parameter_id")
     )
     private Set<Parameter> parameters =  new HashSet<>();
+    //Relationship between Aircraft and Test (1:n)
     @OneToMany(mappedBy = "aircraft")
     private Set<Test> tests = new HashSet<>();
 }

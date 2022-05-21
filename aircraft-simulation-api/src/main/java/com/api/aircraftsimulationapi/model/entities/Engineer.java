@@ -19,6 +19,7 @@ public class Engineer implements Serializable {
     private String nome;
     @Column(name = "birth_date", nullable = false)
     private Date birthDate;
+    //Relationship between Engineer and Test (1:n)
     @OneToMany(mappedBy = "engineer")
     private Set<Test> tests = new HashSet<>();
 }

@@ -25,6 +25,7 @@ public class Parameter implements Serializable {
     private int maxValue;
     @Column(name = "active_status", nullable = false)
     private boolean activeStatus;
+    //Relationship between Parameter and Aircraft (n:m)
     @ManyToMany(mappedBy = "parameters")
     private Set<Aircraft> aircrafts = new HashSet<>();
     @OneToMany(mappedBy = "parameter")
