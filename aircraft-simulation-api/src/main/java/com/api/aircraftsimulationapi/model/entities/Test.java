@@ -1,6 +1,6 @@
 package com.api.aircraftsimulationapi.model.entities;
 
-import com.api.aircraftsimulationapi.model.helpers.TestId;
+import com.api.aircraftsimulationapi.model.helpers.keys.TestId;
 import lombok.Data;
 
 import javax.persistence.*;

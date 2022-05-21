@@ -15,6 +15,8 @@ public class Parameter implements Serializable {
     private int id;
     @Column(length = 6)
     private String code;
+    @Column(length = 45)
+    private String name;
     @Column(nullable = false)
     private String type;
     @Column(name = "sampling_rate", nullable = false)

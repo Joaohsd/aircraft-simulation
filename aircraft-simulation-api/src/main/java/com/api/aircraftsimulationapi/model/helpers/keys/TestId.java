@@ -1,4 +1,4 @@
-package com.api.aircraftsimulationapi.model.helpers;
+package com.api.aircraftsimulationapi.model.helpers.keys;
 
 import com.api.aircraftsimulationapi.model.entities.Aircraft;
 import lombok.Data;
