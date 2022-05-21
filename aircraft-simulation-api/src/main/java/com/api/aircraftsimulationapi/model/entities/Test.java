@@ -24,6 +24,8 @@ public class Test implements Serializable {
     private Aircraft aircraft;
     /////////////////
 
+    //Self columns
+
     @Column(name = "test_name", nullable = false)
     private String testName;
 
