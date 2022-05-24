@@ -1,6 +1,7 @@
 package com.api.aircraftsimulationapi.model.entities;
 
 import com.api.aircraftsimulationapi.model.helpers.keys.TestId;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,8 +1,10 @@
 package com.api.aircraftsimulationapi.controller;
 
 import com.api.aircraftsimulationapi.model.entities.Aircraft;
+import com.api.aircraftsimulationapi.model.entities.Parameter;
 import com.api.aircraftsimulationapi.model.helpers.dto.AircraftDTO;
 import com.api.aircraftsimulationapi.model.services.AircraftService;
+import com.api.aircraftsimulationapi.model.services.ParameterService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +17,12 @@ import java.util.Optional;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/aircrafts")
 public class AircraftController {
-    final AircraftService aircraftService;
+    private final AircraftService aircraftService;
+    private final ParameterService parameterService;
 
-    public AircraftController(AircraftService aircraftService) {
+    public AircraftController(AircraftService aircraftService, ParameterService parameterService) {
         this.aircraftService = aircraftService;
+        this.parameterService = parameterService;
     }
 
     //Register ONE AIRCRAFT
@@ -40,12 +44,36 @@ public class AircraftController {
     }
 
     //Get ONE AIRCRAFT
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> getOneParkingSpot(@PathVariable(value = "id") String aircraftCode){
-        Optional<Aircraft> aircraftOptional = aircraftService.findById(aircraftCode);
+    @GetMapping("/{aircraftCode}")
+    public ResponseEntity<Object> getOneAircraft(@PathVariable(value = "aircraftCode") String aircraftCode){
+        Optional<Aircraft> aircraftOptional = aircraftService.findByAircraftCode(aircraftCode);
         if(!aircraftOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aircraft not found");
         }
         return ResponseEntity.status(HttpStatus.FOUND).body(aircraftOptional.get());
+    }
+
+    //Get ALL PARAMETERS from ONE AIRCRAFT
+    @GetMapping("/{aircraftCode}/parameters")
+    public ResponseEntity<Object> getAllParametersFromOneAircraft(@PathVariable(value = "aircraftCode") String aircraftCode){
+        Optional<Aircraft> aircraftOptional = aircraftService.findByAircraftCode(aircraftCode);
+        if(!aircraftOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aircraft not found");
+        }
+        return ResponseEntity.status(HttpStatus.FOUND).body(aircraftOptional.get().getParameters());
+    }
+
+    //Get ONE PARAMETER from ONE AIRCRAFT
+    @GetMapping("/{aircraftCode}/parameters/{parameterCode}")
+    public ResponseEntity<Object> getParameterFromAircraft(@PathVariable(value = "aircraftCode") String aircraftCode,
+                                                    @PathVariable(value= "parameterCode") String parameterCode){
+        Optional<Aircraft> aircraftOptional = aircraftService.findByAircraftCode(aircraftCode);
+        if(!aircraftOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aircraft not found");
+        }
+        if(!parameterService.existsByParameterCodeAndAircraft(parameterCode,aircraftOptional.get())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parameter not found");
+        }
+        return ResponseEntity.status(HttpStatus.FOUND).body(aircraftService.findByParameterCodeAndAircraft(parameterCode,aircraftOptional.get()));
     }
 }

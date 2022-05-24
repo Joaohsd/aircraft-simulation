@@ -3,7 +3,6 @@ package com.api.aircraftsimulationapi.model.services;
 import com.api.aircraftsimulationapi.model.entities.Aircraft;
 import com.api.aircraftsimulationapi.model.entities.Parameter;
 import com.api.aircraftsimulationapi.model.repositories.AircraftRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,11 +31,20 @@ public class AircraftService {
         return aircraftRepository.findAll();
     }
 
-    public Optional<Aircraft> findById(String aircraftCode) {
+    public Optional<Aircraft> findByAircraftCode(String aircraftCode) {
         return aircraftRepository.findById(aircraftCode);
     }
 
     public void registerParameterInAircraft(Parameter parameter, Aircraft aircraft) {
         aircraft.addParameter(parameter);
+    }
+
+    //Return the parameter from an aircraft based on parameter code passed to this service
+    public Parameter findByParameterCodeAndAircraft(String parameterCode, Aircraft aircraft) {
+        for (Parameter p : aircraft.getParameters()) {
+            if(p.getCode().equals(parameterCode))
+                return p;
+        }
+        return null;
     }
 }

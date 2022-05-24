@@ -5,8 +5,10 @@ import com.api.aircraftsimulationapi.model.entities.Parameter;
 import com.api.aircraftsimulationapi.model.repositories.ParameterRepository;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.ListView;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Service
 public class ParameterService {
@@ -18,7 +20,7 @@ public class ParameterService {
         this.aircraftService = aircraftService;
     }
 
-    public boolean existsByCodeAndAircrafts(String code, Aircraft aircraft) {
+    public boolean existsByParameterCodeAndAircraft(String code, Aircraft aircraft) {
         return parameterRepository.existsByCodeAndAircrafts(code,aircraft);
     }
 
@@ -27,5 +29,9 @@ public class ParameterService {
         Parameter auxParameter = parameterRepository.save(parameter);
         aircraftService.registerParameterInAircraft(auxParameter,aircraft);
         return auxParameter;
+    }
+
+    public List<Parameter> getAllParameters() {
+        return parameterRepository.findAll();
     }
 }

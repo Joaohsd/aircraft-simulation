@@ -40,6 +40,7 @@ public class Parameter implements Serializable {
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "parameters")
     private Set<Aircraft> aircrafts = new HashSet<>();
+    @JsonIgnore
     @OneToMany(mappedBy = "parameter")
     Set<TestData> testData = new HashSet<>();
 

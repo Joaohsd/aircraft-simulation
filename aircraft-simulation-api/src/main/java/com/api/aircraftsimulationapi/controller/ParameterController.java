@@ -27,13 +27,18 @@ public class ParameterController {
     //Register ONE PARAMETER
     @PostMapping
     public ResponseEntity<Object> saveParameter(@RequestBody @Valid ParameterDTO parameterDTO) {
-        Optional<Aircraft> aircraft = aircraftService.findById(parameterDTO.getAircraftCode());
-        if(!aircraft.isPresent())
+        Optional<Aircraft> aircraftOptional = aircraftService.findByAircraftCode(parameterDTO.getAircraftCode());
+        if(!aircraftOptional.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ERROR: Aircraft does not exist");
-        if(parameterService.existsByCodeAndAircrafts(parameterDTO.getCode(),aircraft.get()))
+        if(parameterService.existsByParameterCodeAndAircraft(parameterDTO.getCode(),aircraftOptional.get()))
             return ResponseEntity.status(HttpStatus.CONFLICT).body("ERROR: Parameter " + parameterDTO.getCode() + " already exists at aircraft " + parameterDTO.getAircraftCode());
         var parameter = new Parameter();
         BeanUtils.copyProperties(parameterDTO,parameter);
-        return ResponseEntity.status(HttpStatus.CREATED).body(parameterService.save(parameter,aircraft.get()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(parameterService.save(parameter,aircraftOptional.get()));
+    }
+    //Get ALL PARAMETERS
+    @GetMapping
+    public ResponseEntity<Object> getAllParameters(){
+        return ResponseEntity.status(HttpStatus.OK).body(parameterService.getAllParameters());
     }
 }
