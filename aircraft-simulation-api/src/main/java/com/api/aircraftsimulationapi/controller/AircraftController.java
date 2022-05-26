@@ -65,7 +65,7 @@ public class AircraftController {
 
     //Get ONE PARAMETER from ONE AIRCRAFT
     @GetMapping("/{aircraftCode}/parameters/{parameterCode}")
-    public ResponseEntity<Object> getParameterFromAircraft(@PathVariable(value = "aircraftCode") String aircraftCode,
+    public ResponseEntity<Object> getOneParameterFromAircraft(@PathVariable(value = "aircraftCode") String aircraftCode,
                                                     @PathVariable(value= "parameterCode") String parameterCode){
         Optional<Aircraft> aircraftOptional = aircraftService.findByAircraftCode(aircraftCode);
         if(!aircraftOptional.isPresent()) {
