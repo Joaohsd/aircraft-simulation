@@ -29,7 +29,12 @@ public class EngineerService {
         return engineerRepository.findAll();
     }
 
-    public Optional<Engineer> findById(String cpf) {
+    public Optional<Engineer> findByCPF(String cpf) {
         return engineerRepository.findById(cpf);
+    }
+
+    @Transactional
+    public void delete(Engineer engineer) {
+        engineerRepository.delete(engineer);
     }
 }

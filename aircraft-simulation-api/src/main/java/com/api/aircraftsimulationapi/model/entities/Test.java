@@ -5,9 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -25,12 +28,15 @@ public class Test implements Serializable {
     //Relationship between Test and Aircraft (n:1)
     @Id
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "aircraft_code", referencedColumnName = "aircraft_code", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "aircraft_code", referencedColumnName = "aircraft_code",nullable = false)
     private Aircraft aircraft;
 
     //Self columns
     @Column(name = "test_name", nullable = false)
     private String testName;
+    @Column(name = "test_date")
+    private Date testDate;
 
     //Relationships
     //Relationship between Test and Engineer (n:1)
@@ -47,11 +53,11 @@ public class Test implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Test test = (Test) o;
-        return testNumber == test.testNumber && aircraft.equals(test.aircraft) && testName.equals(test.testName) && engineer.equals(test.engineer) && Objects.equals(testData, test.testData);
+        return testNumber == test.testNumber && aircraft.equals(test.aircraft) && testName.equals(test.testName) && testDate.equals(test.testDate) && engineer.equals(test.engineer) && Objects.equals(testData, test.testData);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(testNumber, aircraft, testName, engineer, testData);
+        return Objects.hash(testNumber, aircraft, testName, testDate, engineer, testData);
     }
 }

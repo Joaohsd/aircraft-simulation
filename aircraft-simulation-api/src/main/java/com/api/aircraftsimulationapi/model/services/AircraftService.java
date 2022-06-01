@@ -47,4 +47,20 @@ public class AircraftService {
         }
         return null;
     }
+
+    @Transactional
+    public void delete(Aircraft aircraft) {
+        aircraftRepository.delete(aircraft);
+    }
+
+    @Transactional
+    public void deleteParameterFromAircraft(String parameterCode, Aircraft aircraft) {
+        Parameter parameter = null;
+        for (Parameter p : aircraft.getParameters()) {
+            if(p.getCode().equals(parameterCode)) {
+                parameter = p;
+            }
+        }
+        aircraft.getParameters().remove(parameter);
+    }
 }

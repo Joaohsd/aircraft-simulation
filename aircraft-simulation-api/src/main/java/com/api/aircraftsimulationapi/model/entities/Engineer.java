@@ -1,5 +1,6 @@
 package com.api.aircraftsimulationapi.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,7 @@ public class Engineer implements Serializable {
 
     //Relationships
     //Relationship between Engineer and Test (1:n)
+    @JsonIgnore
     @OneToMany(mappedBy = "engineer")
     private Set<Test> tests = new HashSet<>();
 
@@ -37,11 +39,11 @@ public class Engineer implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Engineer engineer = (Engineer) o;
-        return cpf.equals(engineer.cpf) && registration.equals(engineer.registration) && name.equals(engineer.name) && birthDate.equals(engineer.birthDate) && Objects.equals(tests, engineer.tests);
+        return cpf.equals(engineer.cpf) && registration.equals(engineer.registration) && name.equals(engineer.name) && birthDate.equals(engineer.birthDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cpf, registration, name, birthDate, tests);
+        return Objects.hash(cpf, registration, name, birthDate);
     }
 }

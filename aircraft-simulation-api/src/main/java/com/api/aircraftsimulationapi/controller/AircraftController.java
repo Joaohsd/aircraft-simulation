@@ -5,6 +5,7 @@ import com.api.aircraftsimulationapi.model.entities.Parameter;
 import com.api.aircraftsimulationapi.model.helpers.dto.AircraftDTO;
 import com.api.aircraftsimulationapi.model.services.AircraftService;
 import com.api.aircraftsimulationapi.model.services.ParameterService;
+import com.api.aircraftsimulationapi.model.services.TestService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/aircrafts")
 public class AircraftController {
+    //Services
     private final AircraftService aircraftService;
     private final ParameterService parameterService;
 
@@ -30,17 +32,34 @@ public class AircraftController {
     public ResponseEntity<Object> saveAircraft(@RequestBody @Valid AircraftDTO aircraftDTO){
         if(aircraftService.existsByAircraftCode(aircraftDTO.getAircraftCode()))
             return ResponseEntity.status(HttpStatus.CONFLICT).body("ERROR: Aircraft Code already exists");
+
         var aircraft = new Aircraft();
+
         BeanUtils.copyProperties(aircraftDTO,aircraft);
-        aircraft.setAicraftCode(aircraftDTO.getAircraftCode());
+
+        aircraft.setAircraftCode(aircraftDTO.getAircraftCode());
         aircraft.setNumParameters(0);
-        return ResponseEntity.status(HttpStatus.CREATED).body(aircraftService.save(aircraft));
+
+        return ResponseEntity.status(HttpStatus.OK).body(aircraftService.save(aircraft));
     }
 
     //Get ALL AIRCRAFTS
     @GetMapping
     public ResponseEntity<Object> getAllAircrafts(){
         return ResponseEntity.status(HttpStatus.OK).body(aircraftService.getAllAircrafts());
+    }
+
+    //Deleting ONE AIRCRAFT
+    @DeleteMapping("/{aircraftCode}")
+    public ResponseEntity<Object> deleteAircraft(@PathVariable(value = "aircraftCode") String aircraftCode){
+        Optional<Aircraft> aircraftOptional = aircraftService.findByAircraftCode(aircraftCode);
+
+        if(!aircraftOptional.isPresent())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ERROR: Aircraft not found");
+
+        aircraftService.delete(aircraftOptional.get());
+
+        return ResponseEntity.status(HttpStatus.OK).body("Aircraft deleted");
     }
 
     //Get ONE AIRCRAFT
@@ -50,7 +69,7 @@ public class AircraftController {
         if(!aircraftOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aircraft not found");
         }
-        return ResponseEntity.status(HttpStatus.FOUND).body(aircraftOptional.get());
+        return ResponseEntity.status(HttpStatus.OK).body(aircraftOptional.get());
     }
 
     //Get ALL PARAMETERS from ONE AIRCRAFT
@@ -60,7 +79,7 @@ public class AircraftController {
         if(!aircraftOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aircraft not found");
         }
-        return ResponseEntity.status(HttpStatus.FOUND).body(aircraftOptional.get().getParameters());
+        return ResponseEntity.status(HttpStatus.OK).body(aircraftOptional.get().getParameters());
     }
 
     //Get ONE PARAMETER from ONE AIRCRAFT
@@ -68,12 +87,38 @@ public class AircraftController {
     public ResponseEntity<Object> getOneParameterFromAircraft(@PathVariable(value = "aircraftCode") String aircraftCode,
                                                     @PathVariable(value= "parameterCode") String parameterCode){
         Optional<Aircraft> aircraftOptional = aircraftService.findByAircraftCode(aircraftCode);
+
         if(!aircraftOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aircraft not found");
         }
         if(!parameterService.existsByParameterCodeAndAircraft(parameterCode,aircraftOptional.get())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parameter not found");
         }
-        return ResponseEntity.status(HttpStatus.FOUND).body(aircraftService.findByParameterCodeAndAircraft(parameterCode,aircraftOptional.get()));
+
+        return ResponseEntity.status(HttpStatus.OK).body(aircraftService.findByParameterCodeAndAircraft(parameterCode,aircraftOptional.get()));
+    }
+
+    @DeleteMapping("/{aircraftCode}/parameters/{parameterCode}")
+    public ResponseEntity<Object> deleteOneParameterFromAircraft(@PathVariable(value = "aircraftCode") String aircraftCode,
+                                                              @PathVariable(value= "parameterCode") String parameterCode){
+        Optional<Aircraft> aircraftOptional = aircraftService.findByAircraftCode(aircraftCode);
+
+        if(!aircraftOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aircraft not found");
+        }
+        if(!parameterService.existsByParameterCodeAndAircraft(parameterCode,aircraftOptional.get())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parameter not found");
+        }
+        aircraftService.deleteParameterFromAircraft(parameterCode, aircraftOptional.get());
+        return ResponseEntity.status(HttpStatus.OK).body(aircraftService.findByParameterCodeAndAircraft(parameterCode,aircraftOptional.get()));
+    }
+
+    @GetMapping("/{aircraftCode}/tests")
+    public ResponseEntity<Object> getAllTestsFromAircraft(@PathVariable(value = "aircraftCode") String aircraftCode){
+        Optional<Aircraft> aircraftOptional = aircraftService.findByAircraftCode(aircraftCode);
+        if(!aircraftOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aircraft not found");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(aircraftOptional.get().getTests());
     }
 }

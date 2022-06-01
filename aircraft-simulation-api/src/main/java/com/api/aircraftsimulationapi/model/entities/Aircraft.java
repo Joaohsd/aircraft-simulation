@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,7 +19,7 @@ import java.util.Set;
 public class Aircraft implements Serializable {
     @Id
     @Column(name = "aircraft_code")
-    private String aicraftCode;
+    private String aircraftCode;
 
     //Self columns
     @Column(nullable = false)
@@ -38,6 +40,7 @@ public class Aircraft implements Serializable {
     private Set<Parameter> parameters =  new HashSet<>();
 
     //Relationship between Aircraft and Test (1:n)
+    @JsonIgnore
     @OneToMany(mappedBy = "aircraft")
     private Set<Test> tests = new HashSet<>();
 
@@ -52,11 +55,11 @@ public class Aircraft implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Aircraft aircraft = (Aircraft) o;
-        return numParameters == aircraft.numParameters && test == aircraft.test && Objects.equals(aicraftCode, aircraft.aicraftCode) && Objects.equals(category, aircraft.category) && Objects.equals(tests, aircraft.tests);
+        return numParameters == aircraft.numParameters && test == aircraft.test && Objects.equals(aircraftCode, aircraft.aircraftCode) && Objects.equals(category, aircraft.category);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(aicraftCode, category, numParameters, test, tests);
+        return Objects.hash(aircraftCode, category, numParameters, test);
     }
 }

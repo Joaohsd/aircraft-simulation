@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -39,6 +41,7 @@ public class Parameter implements Serializable {
     //Relationship between Parameter and Aircraft (n:m)
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "parameters")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Aircraft> aircrafts = new HashSet<>();
     @JsonIgnore
     @OneToMany(mappedBy = "parameter")

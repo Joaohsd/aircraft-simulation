@@ -14,8 +14,10 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/parameters")
 public class ParameterController {
+    //Services
     private final ParameterService parameterService;
     private final AircraftService aircraftService;
 
@@ -28,13 +30,16 @@ public class ParameterController {
     @PostMapping
     public ResponseEntity<Object> saveParameter(@RequestBody @Valid ParameterDTO parameterDTO) {
         Optional<Aircraft> aircraftOptional = aircraftService.findByAircraftCode(parameterDTO.getAircraftCode());
+
         if(!aircraftOptional.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ERROR: Aircraft does not exist");
         if(parameterService.existsByParameterCodeAndAircraft(parameterDTO.getCode(),aircraftOptional.get()))
             return ResponseEntity.status(HttpStatus.CONFLICT).body("ERROR: Parameter " + parameterDTO.getCode() + " already exists at aircraft " + parameterDTO.getAircraftCode());
+
         var parameter = new Parameter();
         BeanUtils.copyProperties(parameterDTO,parameter);
-        return ResponseEntity.status(HttpStatus.CREATED).body(parameterService.save(parameter,aircraftOptional.get()));
+
+        return ResponseEntity.status(HttpStatus.OK).body(parameterService.save(parameter,aircraftOptional.get()));
     }
     //Get ALL PARAMETERS
     @GetMapping

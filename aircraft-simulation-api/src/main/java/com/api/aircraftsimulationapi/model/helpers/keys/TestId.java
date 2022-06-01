@@ -8,5 +8,5 @@ import java.io.Serializable;
 @Data
 public class TestId implements Serializable {
     private int testNumber;
-    private Aircraft aircraft;
+    private String aircraft;
 }
