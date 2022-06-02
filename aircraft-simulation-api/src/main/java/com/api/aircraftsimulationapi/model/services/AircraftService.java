@@ -2,6 +2,7 @@ package com.api.aircraftsimulationapi.model.services;
 
 import com.api.aircraftsimulationapi.model.entities.Aircraft;
 import com.api.aircraftsimulationapi.model.entities.Parameter;
+import com.api.aircraftsimulationapi.model.entities.Test;
 import com.api.aircraftsimulationapi.model.repositories.AircraftRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Bean;
@@ -77,5 +78,13 @@ public class AircraftService {
         }
         BeanUtils.copyProperties(parameter,auxParameter);
         return auxParameter;
+    }
+
+    public Test findByTestNumberAndAircraft(int testNumber, Aircraft aircraft) {
+        for (Test test : aircraft.getTests()) {
+            if(test.getTestNumber() == testNumber)
+                return test;
+        }
+        return null;
     }
 }

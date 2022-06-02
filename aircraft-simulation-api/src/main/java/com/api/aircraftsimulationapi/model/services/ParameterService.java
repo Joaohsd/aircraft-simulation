@@ -40,4 +40,8 @@ public class ParameterService {
         aircraftService.updateParameterInAircraft(auxParameter,aircraft);
         return auxParameter;
     }
+
+    public void delete(Parameter parameter) {
+        parameterRepository.delete(parameter);
+    }
 }

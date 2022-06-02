@@ -44,6 +44,7 @@ public class Test implements Serializable {
     @JoinColumn(name = "cpf_engineer", referencedColumnName = "cpf", nullable = false)
     private Engineer engineer;
     //Relationship between Parameter and TestData (1:n)
+    @JsonIgnore
     @OneToMany(mappedBy = "test")
     Set<TestData> testData = new HashSet<>();
 
@@ -53,11 +54,11 @@ public class Test implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Test test = (Test) o;
-        return testNumber == test.testNumber && aircraft.equals(test.aircraft) && testName.equals(test.testName) && testDate.equals(test.testDate) && engineer.equals(test.engineer) && Objects.equals(testData, test.testData);
+        return testNumber == test.testNumber && aircraft.equals(test.aircraft) && testName.equals(test.testName) && testDate.equals(test.testDate) && engineer.equals(test.engineer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(testNumber, aircraft, testName, testDate, engineer, testData);
+        return Objects.hash(testNumber, aircraft, testName, testDate, engineer);
     }
 }

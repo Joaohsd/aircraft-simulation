@@ -3,6 +3,8 @@ package com.api.aircraftsimulationapi.model.entities;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -27,6 +29,7 @@ public class TestData implements Serializable {
     //Relationships
     //Relationship between TestData and Test (n:1)
     @ManyToOne(cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumns({
             @JoinColumn(name="test_number", referencedColumnName = "test_number"),
             @JoinColumn(name="aircraft_code", referencedColumnName = "aircraft_code"),
@@ -34,6 +37,7 @@ public class TestData implements Serializable {
     private Test test;
     //Relationship between TestData and Parameter (n:1)
     @ManyToOne(cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "parameter_id", referencedColumnName = "id", nullable = false)
     private Parameter parameter;
 

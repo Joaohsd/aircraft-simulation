@@ -53,11 +53,11 @@ public class Parameter implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Parameter parameter = (Parameter) o;
-        return id == parameter.id && samplingRate == parameter.samplingRate && minValue == parameter.minValue && maxValue == parameter.maxValue && activeStatus == parameter.activeStatus && code.equals(parameter.code) && name.equals(parameter.name) && type.equals(parameter.type) && Objects.equals(testData, parameter.testData);
+        return id == parameter.id && samplingRate == parameter.samplingRate && minValue == parameter.minValue && maxValue == parameter.maxValue && activeStatus == parameter.activeStatus && code.equals(parameter.code) && name.equals(parameter.name) && type.equals(parameter.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, code, name, type, samplingRate, minValue, maxValue, activeStatus, testData);
+        return Objects.hash(id, code, name, type, samplingRate, minValue, maxValue, activeStatus);
     }
 }

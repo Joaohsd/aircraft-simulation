@@ -110,8 +110,10 @@ public class AircraftController {
         if(!parameterService.existsByParameterCodeAndAircraft(parameterCode,aircraftOptional.get())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parameter not found");
         }
-        aircraftService.deleteParameterFromAircraft(parameterCode, aircraftOptional.get());
-        return ResponseEntity.status(HttpStatus.OK).body(aircraftService.findByParameterCodeAndAircraft(parameterCode,aircraftOptional.get()));
+
+        Parameter parameter = aircraftService.findByParameterCodeAndAircraft(parameterCode,aircraftOptional.get());
+        parameterService.delete(parameter);
+        return ResponseEntity.status(HttpStatus.OK).body("Parameter Deleted");
     }
 
     @PutMapping("/{aircraftCode}/parameters/{parameterCode}")

@@ -32,6 +32,7 @@ public class Aircraft implements Serializable {
     //Relationships
     //Relationship between Aircraft and Parameter (n:m)
     @ManyToMany(cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(
             name = "aircraft_parameter",
             joinColumns = {@JoinColumn(name = "aircraft_code", referencedColumnName = "aircraft_code")},
