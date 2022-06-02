@@ -3,6 +3,8 @@ package com.api.aircraftsimulationapi.model.services;
 import com.api.aircraftsimulationapi.model.entities.Aircraft;
 import com.api.aircraftsimulationapi.model.entities.Parameter;
 import com.api.aircraftsimulationapi.model.repositories.AircraftRepository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -62,5 +64,18 @@ public class AircraftService {
             }
         }
         aircraft.getParameters().remove(parameter);
+    }
+
+    public Parameter updateParameterInAircraft(Parameter parameter, Aircraft aircraft) {
+        Set<Parameter> parameters = aircraft.getParameters();
+        Parameter auxParameter = null;
+        for (Parameter p : parameters) {
+            if(p.getCode().equals(parameter.getCode())){
+                auxParameter = p;
+                break;
+            }
+        }
+        BeanUtils.copyProperties(parameter,auxParameter);
+        return auxParameter;
     }
 }

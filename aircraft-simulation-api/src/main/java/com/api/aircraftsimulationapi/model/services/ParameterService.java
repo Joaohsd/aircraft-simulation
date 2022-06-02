@@ -34,4 +34,10 @@ public class ParameterService {
     public List<Parameter> getAllParameters() {
         return parameterRepository.findAll();
     }
+
+    public Object update(Parameter parameter, Aircraft aircraft) {
+        Parameter auxParameter = parameterRepository.save(parameter);
+        aircraftService.updateParameterInAircraft(auxParameter,aircraft);
+        return auxParameter;
+    }
 }

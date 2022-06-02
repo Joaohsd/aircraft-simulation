@@ -3,6 +3,7 @@ package com.api.aircraftsimulationapi.controller;
 import com.api.aircraftsimulationapi.model.entities.Aircraft;
 import com.api.aircraftsimulationapi.model.entities.Parameter;
 import com.api.aircraftsimulationapi.model.helpers.dto.AircraftDTO;
+import com.api.aircraftsimulationapi.model.helpers.dto.ParameterDTO;
 import com.api.aircraftsimulationapi.model.services.AircraftService;
 import com.api.aircraftsimulationapi.model.services.ParameterService;
 import com.api.aircraftsimulationapi.model.services.TestService;
@@ -100,7 +101,7 @@ public class AircraftController {
 
     @DeleteMapping("/{aircraftCode}/parameters/{parameterCode}")
     public ResponseEntity<Object> deleteOneParameterFromAircraft(@PathVariable(value = "aircraftCode") String aircraftCode,
-                                                              @PathVariable(value= "parameterCode") String parameterCode){
+                                                                @PathVariable(value= "parameterCode") String parameterCode){
         Optional<Aircraft> aircraftOptional = aircraftService.findByAircraftCode(aircraftCode);
 
         if(!aircraftOptional.isPresent()) {
@@ -111,6 +112,29 @@ public class AircraftController {
         }
         aircraftService.deleteParameterFromAircraft(parameterCode, aircraftOptional.get());
         return ResponseEntity.status(HttpStatus.OK).body(aircraftService.findByParameterCodeAndAircraft(parameterCode,aircraftOptional.get()));
+    }
+
+    @PutMapping("/{aircraftCode}/parameters/{parameterCode}")
+    public ResponseEntity<Object> updateOneParameterFromAircraft(@PathVariable(value = "aircraftCode") String aircraftCode,
+                                                                 @PathVariable(value= "parameterCode") String parameterCode,
+                                                                 @RequestBody @Valid ParameterDTO parameterDTO){
+        Optional<Aircraft> aircraftOptional = aircraftService.findByAircraftCode(aircraftCode);
+
+        if(!aircraftOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aircraft not found");
+        }
+        if(!parameterService.existsByParameterCodeAndAircraft(parameterCode,aircraftOptional.get())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parameter not found");
+        }
+
+        Parameter parameterOptional = aircraftService.findByParameterCodeAndAircraft(parameterCode,aircraftOptional.get());
+
+        var parameter = new Parameter();
+
+        BeanUtils.copyProperties(parameterDTO,parameter);
+        parameter.setId(parameterOptional.getId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(parameterService.update(parameter,aircraftOptional.get()));
     }
 
     @GetMapping("/{aircraftCode}/tests")
