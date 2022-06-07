@@ -20,5 +20,7 @@ public class TestDTO {
     @Size(min = 11, max = 11, message = "CPF: Out of length (min:11 and max:11 characters).")
     private String cpfEngineer;
     @NotNull
+    private int time;
+    @NotNull
     private Date testDate;
 }

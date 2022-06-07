@@ -40,8 +40,8 @@ public class Parameter implements Serializable {
     //Relationships
     //Relationship between Parameter and Aircraft (n:m)
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "parameters")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToMany(mappedBy = "parameters")
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Set<Aircraft> aircrafts = new HashSet<>();
     @JsonIgnore
     @OneToMany(mappedBy = "parameter")

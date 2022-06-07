@@ -4,6 +4,7 @@ import com.api.aircraftsimulationapi.model.entities.Aircraft;
 import com.api.aircraftsimulationapi.model.entities.Engineer;
 import com.api.aircraftsimulationapi.model.entities.Test;
 import com.api.aircraftsimulationapi.model.helpers.dto.TestDTO;
+import com.api.aircraftsimulationapi.model.helpers.test.TestEngine;
 import com.api.aircraftsimulationapi.model.repositories.EngineerRepository;
 import com.api.aircraftsimulationapi.model.services.AircraftService;
 import com.api.aircraftsimulationapi.model.services.EngineerService;
@@ -36,7 +37,6 @@ public class TestController {
     public ResponseEntity<Object> saveTest(@RequestBody @Valid TestDTO testDTO){
         Optional<Aircraft> aircraftOptional = aircraftService.findByAircraftCode(testDTO.getAircraftCode());
         Optional<Engineer> engineerOptional = engineerService.findByCPF(testDTO.getCpfEngineer());
-
         if(!aircraftOptional.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ERROR: Aircraft does not exist");
         if(!engineerOptional.isPresent())
@@ -52,6 +52,11 @@ public class TestController {
         BeanUtils.copyProperties(testDTO,test);
         test.setEngineer(engineer);
         test.setAircraft(aircraft);
+
+        TestEngine.aircraft = test.getAircraft();
+        TestEngine.time = test.getTime();
+        TestEngine.testNumber = test.getTestNumber();
+        TestEngine.runTest();
 
         return ResponseEntity.status(HttpStatus.OK).body(testService.save(test));
     }

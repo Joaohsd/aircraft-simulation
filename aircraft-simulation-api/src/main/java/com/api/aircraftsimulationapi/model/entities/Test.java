@@ -37,6 +37,8 @@ public class Test implements Serializable {
     private String testName;
     @Column(name = "test_date")
     private Date testDate;
+    @Column(name = "duration_time")
+    private int time;
 
     //Relationships
     //Relationship between Test and Engineer (n:1)
