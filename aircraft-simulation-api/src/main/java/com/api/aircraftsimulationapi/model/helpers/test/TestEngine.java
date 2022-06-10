@@ -51,30 +51,23 @@ public abstract class TestEngine {
         options.add(StandardOpenOption.CREATE);
         // Writing on file
         try{
-            Files.writeString(file,"TimeStamp,AircraftCode,TestNumber,ParameterCode,Value\n",StandardOpenOption.CREATE);
+            Files.writeString(file,"TimeStamp,AircraftCode,TestNumber,ParameterCode,minValue,maxValue,currentValue,Result\n",StandardOpenOption.CREATE);
         }catch(IOException e){
             e.printStackTrace();
         }
 
         // Start generating of samples
-        while(System.currentTimeMillis() <= end){
-            for (int i = 0; i < parameterGenSamples.size(); i++) {
-                System.out.println(parameterGenSamples.get(i));
-                System.out.println(parameterGenSamples.get(0).getState());
-                if(parameterGenSamples.get(i).isSampleGenerated()) {
-                    String code = parameterGenSamples.get(i).getCode();
-                    int samplingRate = parameterGenSamples.get(i).getSamplingRate();
-                    int minValue = parameterGenSamples.get(i).getMinValue();
-                    int maxValue = parameterGenSamples.get(i).getMaxValue();
-                    System.out.println(samplingRate);
-                    parameterGenSamples.remove(i);
-                    parameterGenSamples.add(i,new ParameterGenSample(code, samplingRate, minValue, maxValue));
-                    parameterGenSamples.get(i).start();
-                }
-            }
+        for (int i = 0; i < parameterGenSamples.size(); i++) {
+            System.out.println(parameterGenSamples.get(i).getCode());
+            TestParameter p = new TestParameter();
+            p.setParameters(parameterGenSamples.get(i), end);
+            p.start();
         }
 
+        try {
+            Thread.sleep(time+1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
-
-
 }

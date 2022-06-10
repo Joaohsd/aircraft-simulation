@@ -13,13 +13,12 @@ import java.util.Random;
 
 @Getter
 @Setter
-public class ParameterGenSample extends Thread{
+public class ParameterGenSample extends Thread {
     private String code;
     private int samplingRate;
     private Integer minValue;
     private Integer maxValue;
     private double value;
-    private boolean sampleGenerated;
     private Random generatorValue;
 
     public ParameterGenSample(String code, int samplingRate, int minValue, int maxValue) {
@@ -27,17 +26,10 @@ public class ParameterGenSample extends Thread{
         this.samplingRate = samplingRate;
         this.minValue = minValue;
         this.maxValue = maxValue;
-        this.sampleGenerated = true;
         this.generatorValue = new Random();
     }
 
-    @Override
-    public void run() {
-        this.sampleGenerated = false;
-        // Generate sample
-        this.value =  this.minValue + (this.maxValue - this.minValue) * this.generatorValue.nextDouble();
-        System.out.println(this.value);
-
+    public void writeToFile(String result) {
         // Finding file created
         try{
             TestEngine.file = Paths.get(TestEngine.fileName);
@@ -48,27 +40,33 @@ public class ParameterGenSample extends Thread{
         // Writing on file
         try{
             String sample = System.currentTimeMillis() +
-                              "," +
-                              TestEngine.aircraft.getAircraftCode() +
-                              "," +
-                              TestEngine.testNumber +
-                              "," +
-                              this.code +
-                              "," +
-                              this.value +
-                              "\n";
+                    "," +
+                    TestEngine.aircraft.getAircraftCode() +
+                    "," +
+                    TestEngine.testNumber +
+                    "," +
+                    this.code +
+                    "," +
+                    this.minValue +
+                    "," +
+                    this.maxValue +
+                    "," +
+                    this.value +
+                    "," +
+                    result +
+                    "\n";
             Files.writeString(TestEngine.file,sample,StandardOpenOption.APPEND);
         } catch(IOException e){
             e.printStackTrace();
         }
+    }
 
-        // Wait a time to get the next sample
-        try {
-            Thread.sleep(TestEngine.CONVERT_TO_MILLIS/this.samplingRate);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public double generateSample() {
+        // Generate sample
+        double min = this.minValue - (this.minValue * 0.01);
+        double max = this.maxValue + (this.maxValue * 0.01);
 
-        this.sampleGenerated = true;
+        this.value =  (min) + (max - min) * this.generatorValue.nextDouble();
+        return this.value;
     }
 }
