@@ -25,6 +25,8 @@ public class TestData implements Serializable {
     private Date timeStamp;
     @Column(nullable = false)
     private double value;
+    @Column(nullable = false)
+    private boolean status;
 
     //Relationships
     //Relationship between TestData and Test (n:1)

@@ -26,6 +26,7 @@ public abstract class TestEngine {
         parameterGenSamples.clear();
 
         time*=SECONDS_PER_MINUTE*CONVERT_TO_MILLIS;
+
         long initial = System.currentTimeMillis();
         long end = initial+time;
 
@@ -46,9 +47,7 @@ public abstract class TestEngine {
         }catch(InvalidPathException e){
             e.printStackTrace();
         }
-        Set<OpenOption> options = new HashSet<>();
-        options.add(StandardOpenOption.APPEND);
-        options.add(StandardOpenOption.CREATE);
+
         // Writing on file
         try{
             Files.writeString(file,"TimeStamp,AircraftCode,TestNumber,ParameterCode,minValue,maxValue,currentValue,Result\n",StandardOpenOption.CREATE);

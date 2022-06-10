@@ -112,6 +112,7 @@ public class AircraftController {
         }
 
         Parameter parameter = aircraftService.findByParameterCodeAndAircraft(parameterCode,aircraftOptional.get());
+        aircraftService.deleteParameterFromAircraft(parameterCode,aircraftOptional.get());
         parameterService.delete(parameter);
         return ResponseEntity.status(HttpStatus.OK).body("Parameter Deleted");
     }
