@@ -28,7 +28,6 @@ public class TestDataController {
     private final ParameterService parameterService;
     private final TestService testService;
 
-
     public TestDataController(TestDataService testDataService, AircraftService aircraftService, ParameterService parameterService, TestService testService) {
         this.testDataService = testDataService;
         this.aircraftService = aircraftService;
@@ -52,6 +51,15 @@ public class TestDataController {
         testData.setParameter(parameter);
         testData.setTest(test);
         return ResponseEntity.status(HttpStatus.OK).body(testDataService.save(testData));
+    }
+
+    @GetMapping("/{aircraftCode}/tests/{testNumber}")
+    ResponseEntity<Object> getTestDataFromAircraft(@PathVariable(value = "aircraftCode") String aircraftCode,
+                                                   @PathVariable(value= "testNumber") int testNumber){
+        Optional<Aircraft> aircraftOptional = aircraftService.findByAircraftCode(aircraftCode);
+        if(!aircraftOptional.isPresent())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: Aircraft not found");
+        return ResponseEntity.status(HttpStatus.OK).body(testDataService.getTestDataFromTestAndAircraft(aircraftOptional.get(), testNumber));
     }
 
 }
