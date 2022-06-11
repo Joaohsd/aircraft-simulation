@@ -57,6 +57,7 @@ public class TestController {
         TestEngine.time = test.getTime();
         TestEngine.testNumber = test.getTestNumber();
         TestEngine.runTest();
+        TestEngine.registryTestData();
 
         return ResponseEntity.status(HttpStatus.OK).body(testService.save(test));
     }

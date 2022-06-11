@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Random;
 
@@ -37,9 +39,13 @@ public class ParameterGenSample extends Thread {
             e.printStackTrace();
         }
 
+        //Getting timestamp
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        Date date = new Date();
+
         // Writing on file
         try{
-            String sample = System.currentTimeMillis() +
+            String sample = formatter.format(date) +
                     "," +
                     TestEngine.aircraft.getAircraftCode() +
                     "," +

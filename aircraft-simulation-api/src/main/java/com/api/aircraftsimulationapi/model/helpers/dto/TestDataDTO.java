@@ -19,4 +19,6 @@ public class TestDataDTO {
     private Date timeStamp;
     @NotNull
     private double value;
+    @NotNull
+    private boolean status;
 }

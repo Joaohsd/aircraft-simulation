@@ -51,7 +51,6 @@ public class TestDataController {
         BeanUtils.copyProperties(testDataDTO,testData);
         testData.setParameter(parameter);
         testData.setTest(test);
-
         return ResponseEntity.status(HttpStatus.OK).body(testDataService.save(testData));
     }
 

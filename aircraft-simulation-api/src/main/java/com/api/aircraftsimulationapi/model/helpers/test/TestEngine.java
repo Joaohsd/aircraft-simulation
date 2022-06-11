@@ -2,12 +2,16 @@ package com.api.aircraftsimulationapi.model.helpers.test;
 
 import com.api.aircraftsimulationapi.model.entities.Aircraft;
 import com.api.aircraftsimulationapi.model.entities.Parameter;
+import com.api.aircraftsimulationapi.model.services.TestDataService;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Getter
 @Setter
@@ -20,6 +24,8 @@ public abstract class TestEngine {
     public static List<ParameterGenSample> parameterGenSamples= new Vector<>();
     public static final int SECONDS_PER_MINUTE = 60;
     public static final int CONVERT_TO_MILLIS = 1000;
+
+    public static TestClient testClient;
 
     public static void runTest(){
         Set<Parameter> parameters = aircraft.getParameters();
@@ -50,7 +56,7 @@ public abstract class TestEngine {
 
         // Writing on file
         try{
-            Files.writeString(file,"TimeStamp,AircraftCode,TestNumber,ParameterCode,minValue,maxValue,currentValue,Result\n",StandardOpenOption.CREATE);
+            Files.writeString(file,"timeStamp,aircraftCode,testNumber,parameterCode,minValue,maxValue,currentValue,Result\n",StandardOpenOption.CREATE);
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -66,6 +72,64 @@ public abstract class TestEngine {
         try {
             Thread.sleep(time+1);
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void registryTestData() {
+        // Creating a client
+        try {
+            testClient = new TestClient("http://localhost:8080/test-data");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        // Finding file created
+        try{
+            file = Paths.get(fileName);
+        }catch(InvalidPathException e){
+            e.printStackTrace();
+        }
+
+        try {
+            // initialize lines stream
+            Stream<String> stream = Files.lines(file);
+
+            // apply filters and print all ines
+            stream.map(String::trim)
+                    .filter(l -> !l.isEmpty())
+                    .forEach((sample) ->{
+                        String[] sampleSplitted = sample.split(",");
+
+                        if(sampleSplitted[7].equals("ERRO"))
+                            sampleSplitted[7] = "false";
+                        else sampleSplitted[7] = "true";
+
+                        String jsonSampleString = "{\"timeStamp\""+": " + "\"" + sampleSplitted[0] + "\"" + ", " +
+                                                    "\"aircraftCode\""+": " + "\"" + sampleSplitted[1] + "\"" + ", " +
+                                                    "\"testNumber\""+": " + "\"" + sampleSplitted[2] + "\"" + ", " +
+                                                    "\"parameterCode\""+": " + "\"" + sampleSplitted[3] + "\"" + ", " +
+                                                    "\"value\""+": " + "\"" + sampleSplitted[6] + "\"" + ", " +
+                                                    "\"status\""+": " + "\"" + sampleSplitted[7] + "\"" +
+                                                    "}";
+                        System.out.println(jsonSampleString);
+                        testClient.saveTestDataOnDB(jsonSampleString);
+                    });
+
+            // close the stream
+            stream.close();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        deleteFile();
+    }
+
+    private static void deleteFile(){
+        try {
+            Files.delete(file);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
