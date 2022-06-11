@@ -53,10 +53,13 @@ public class TestController {
         test.setEngineer(engineer);
         test.setAircraft(aircraft);
 
+        // Setting test engine
         TestEngine.aircraft = test.getAircraft();
         TestEngine.time = test.getTime();
         TestEngine.testNumber = test.getTestNumber();
+        // Running test engine
         TestEngine.runTest();
+        // Registering on DB
         TestEngine.registryTestData();
 
         return ResponseEntity.status(HttpStatus.OK).body(testService.save(test));

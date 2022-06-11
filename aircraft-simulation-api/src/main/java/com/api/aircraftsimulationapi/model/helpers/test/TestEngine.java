@@ -29,6 +29,7 @@ public abstract class TestEngine {
 
     public static void runTest(){
         Set<Parameter> parameters = aircraft.getParameters();
+
         parameterGenSamples.clear();
 
         time*=SECONDS_PER_MINUTE*CONVERT_TO_MILLIS;
@@ -77,7 +78,7 @@ public abstract class TestEngine {
     }
 
     public static void registryTestData() {
-        // Creating a client
+        // Creating a testClient
         try {
             testClient = new TestClient("http://localhost:8080/test-data");
         } catch (URISyntaxException e) {
@@ -91,11 +92,12 @@ public abstract class TestEngine {
             e.printStackTrace();
         }
 
+        // Saving data on db
         try {
-            // initialize lines stream
+            // Initializing lines stream
             Stream<String> stream = Files.lines(file);
 
-            // apply filters and print all ines
+            // Applying filters and printing all ines in json format
             stream.map(String::trim)
                     .filter(l -> !l.isEmpty())
                     .forEach((sample) ->{
@@ -116,14 +118,15 @@ public abstract class TestEngine {
                         testClient.saveTestDataOnDB(jsonSampleString);
                     });
 
-            // close the stream
+            // Closing the stream
             stream.close();
 
         } catch (IOException ex) {
             ex.printStackTrace();
+        } finally {
+            // Deleting file
+            deleteFile();
         }
-
-        deleteFile();
     }
 
     private static void deleteFile(){
