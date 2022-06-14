@@ -114,6 +114,8 @@ export default {
               this.parameterCodes.push(element.code);
             });
           }
+          console.log(response.status);
+          console.log(response.data);
         })
         .catch((error) => {
           console.log(error);

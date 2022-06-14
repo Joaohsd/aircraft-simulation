@@ -59,7 +59,7 @@
               required
               ></v-select>
 
-          <v-text-field v-model="samplinRate" label="Sampling Rate" required>
+          <v-text-field v-model="samplingRate" label="Sampling Rate" required>
           </v-text-field>
 
           <v-text-field v-model="minValue" label="Valor Mínimo Permitido" required>

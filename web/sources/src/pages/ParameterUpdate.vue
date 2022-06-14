@@ -159,7 +159,6 @@ export default {
                 this.samplingRate = element.samplingRate;
                 this.minValue = element.minValue;
                 this.maxValue = element.maxValue;
-                return element;
             }
         });
     },
