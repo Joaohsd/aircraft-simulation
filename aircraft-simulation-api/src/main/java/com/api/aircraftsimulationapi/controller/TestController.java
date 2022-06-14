@@ -59,8 +59,6 @@ public class TestController {
         TestEngine.testNumber = test.getTestNumber();
         // Running test engine
         TestEngine.runTest();
-        // Registering on DB
-        TestEngine.registryTestData();
 
         return ResponseEntity.status(HttpStatus.OK).body(testService.save(test));
     }

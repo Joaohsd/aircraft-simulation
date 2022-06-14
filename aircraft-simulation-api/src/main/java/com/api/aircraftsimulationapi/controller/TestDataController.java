@@ -6,6 +6,7 @@ import com.api.aircraftsimulationapi.model.entities.Test;
 import com.api.aircraftsimulationapi.model.entities.TestData;
 import com.api.aircraftsimulationapi.model.helpers.dto.TestDTO;
 import com.api.aircraftsimulationapi.model.helpers.dto.TestDataDTO;
+import com.api.aircraftsimulationapi.model.helpers.test.TestEngine;
 import com.api.aircraftsimulationapi.model.services.AircraftService;
 import com.api.aircraftsimulationapi.model.services.ParameterService;
 import com.api.aircraftsimulationapi.model.services.TestDataService;
@@ -51,6 +52,12 @@ public class TestDataController {
         testData.setParameter(parameter);
         testData.setTest(test);
         return ResponseEntity.status(HttpStatus.OK).body(testDataService.save(testData));
+    }
+
+    @PostMapping("/save")
+    ResponseEntity<Object> saveOnDB(){
+        TestEngine.registryTestData();
+        return ResponseEntity.status(HttpStatus.OK).body("Test was saved on DB");
     }
 
     @GetMapping("/{aircraftCode}/tests/{testNumber}")
