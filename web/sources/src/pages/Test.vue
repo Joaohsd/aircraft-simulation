@@ -91,6 +91,48 @@
               Cancelar
             </v-btn>
           </router-link>
+
+          <div style="min-height: 4px">
+            <v-progress-linear
+              v-model="value"
+              :active="progressBar"
+              indeterminate
+            ></v-progress-linear>
+          </div>
+
+          <div class="text-center">
+            <v-dialog v-model="dialog" width="500">
+              <v-card>
+                <v-card-title class="text-h5 grey lighten-2">
+                  Teste Concluido
+                </v-card-title>
+
+                <v-card-text> {{ textDialog }} </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    color="primary"
+                    :disabled="flagButtonDialog"
+                    text
+                    @click="saveOnDB"
+                  >
+                    Sim
+                  </v-btn>
+                  <v-btn
+                    color="danger"
+                    :disabled="flagButtonDialog"
+                    text
+                    @click="dialog = false"
+                  >
+                    Não
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </div>
         </v-container>
       </v-form>
     </v-container>
@@ -114,6 +156,11 @@ export default {
     testTime: null,
     engineer: null,
     checkbox: false,
+    progressBar: false,
+    dialog: false,
+    textDialog: "Deseja salvar os dados do ensaio no banco de dados?",
+    flagDialog: false,
+    flagButtonDialog: false,
     aircraftCodes: [],
     engineerName: [],
     cpfEngineer: "",
@@ -123,7 +170,6 @@ export default {
   }),
 
   mounted() {
-    console.log;
     axios
       .get(this.url + "aircrafts")
       .then((response) => {
@@ -181,6 +227,7 @@ export default {
     },
 
     sendTestInfo() {
+      this.progressBar = true;
       axios
         .post(this.url + "tests", {
           aircraftCode: this.selectAircraft,
@@ -193,7 +240,29 @@ export default {
         .then((response) => {
           console.log(response.status);
           console.log(response.data);
+
+          if (response.status == 200) {
+            this.dialog = true;
+            this.progressBar = false;
+          }
         });
+    },
+
+    saveOnDB() {
+      if (!this.flagDialog) {
+        this.flagButtonDialog = true;
+        this.textDialog = "Salvando no Banco de Dados. Aguarde...";
+        axios.post(this.url + "test-data/save").then((response) => {
+          if (response.status == 200) {
+            this.textDialog = "Deseja ver os resultados do ensaio?";
+            this.flagDialog = true;
+            this.flagButtonDialog = false;
+          }
+        });
+      } else {
+        this.flagDialog = false;
+        this.$router.push("/TestConsultation");
+      }
     },
   },
 };
