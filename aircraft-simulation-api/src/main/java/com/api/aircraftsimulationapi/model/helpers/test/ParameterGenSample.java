@@ -15,7 +15,7 @@ import java.util.Random;
 
 @Getter
 @Setter
-public class ParameterGenSample extends Thread {
+public class ParameterGenSample {
     private String code;
     private int samplingRate;
     private Integer minValue;

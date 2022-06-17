@@ -35,7 +35,7 @@ public class TestDataController {
         this.parameterService = parameterService;
         this.testService = testService;
     }
-
+    // Registering testData
     @PostMapping
     ResponseEntity<Object> saveTestData(@RequestBody @Valid TestDataDTO testDataDTO){
         Optional<Aircraft> aircraftOptional = aircraftService.findByAircraftCode(testDataDTO.getAircraftCode());
@@ -60,6 +60,7 @@ public class TestDataController {
         return ResponseEntity.status(HttpStatus.OK).body("Test was saved on DB");
     }
 
+    // Registering testData
     @GetMapping("/{aircraftCode}/tests/{testNumber}")
     ResponseEntity<Object> getTestDataFromAircraft(@PathVariable(value = "aircraftCode") String aircraftCode,
                                                    @PathVariable(value= "testNumber") int testNumber){

@@ -11,7 +11,7 @@ public class TestParameter extends Thread {
 
     @Override
     public void run() {
-        System.out.println(this.parameter.getState());
+        //System.out.println(this.parameter.getState());
         System.out.println(this.parameter.getCode());
         while(System.currentTimeMillis() <= this.end){
             String code = this.parameter.getCode();

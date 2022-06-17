@@ -24,7 +24,7 @@ public class Parameter implements Serializable {
     //Self columns
     @Column(length = 6)
     private String code;
-    @Column(length = 45)
+    @Column(length = 100)
     private String name;
     @Column(nullable = false)
     private String type;
